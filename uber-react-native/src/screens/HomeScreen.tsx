@@ -1,15 +1,33 @@
+import { useState } from "react";
 import { View, Text } from "react-native";
 import { StyleSheet } from "react-native";
 import MapView from "react-native-maps";
+import AutocompleteInputComponent from "../components/AutocompleteInput";
+import ChooseDestination from "../components/ChooseDestinaton";
 import MapBackground from "../components/MapBackground";
 import SearchBar from "../components/SearchBar";
+export const api = `AIzaSyB9kRda0W-ik0spPoOIPTQJ4_veqAMIj5w`
 
 export default function HomeScreen() {
+  //TODO = implementar lugares como casa, trabalho. https://www.npmjs.com/package/react-native-google-places-autocomplete
+  const [switchHud, setSwitchHud] = useState<boolean>(false)
+  const [originCoordinates, setOriginCoordinates] = useState<string>("");
+  const [destinationCoordinates, setDestinationCoordinates] = useState<string>("");
+
+  const onCoordinatesSelect = (origin: string, destination: string) => {
+    setOriginCoordinates(origin);
+    setDestinationCoordinates(destination);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <MapBackground />
-      <View style={styles.searchBarContainer}>
-        <SearchBar />
+      <MapBackground 
+        originCoordinates={originCoordinates}
+        destinationCoordinates={destinationCoordinates}/>
+      <View style={switchHud ? styles.searchBarContainer : styles.adressContainer}>
+      {switchHud ? <ChooseDestination setSwitchHud={setSwitchHud}
+            onCoordinatesSelect={onCoordinatesSelect} /> : <SearchBar setSwitchHud={setSwitchHud} />}
+        {}
       </View>
     </View>
   );
@@ -18,9 +36,15 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   searchBarContainer: {
     position: "absolute",
-    marginTop: 20,
     alignItems: "center",
     left: 0,
     right: 0,
   },
+  adressContainer: {
+    marginTop: 20,
+    position: "absolute",
+    alignItems: "center",
+    left: 0,
+    right: 0,
+  }
 });
