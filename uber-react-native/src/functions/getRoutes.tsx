@@ -1,6 +1,6 @@
 import polyline from '@mapbox/polyline'
 
-export default async function getRoutes(origin: string, destination: string) {
+const getRoutes = async (origin: { lat: number; lng: number } | null, destination: { lat: number; lng: number } | null) => {
     const api= `AIzaSyB9kRda0W-ik0spPoOIPTQJ4_veqAMIj5w`
     try {
         const response = await fetch(
@@ -12,7 +12,7 @@ export default async function getRoutes(origin: string, destination: string) {
         }
 
         const data = await response.json();
-
+        console.log(data)
         if (!data.routes || data.routes.length === 0) {
             throw new Error('No routes found.');
         }
@@ -26,3 +26,5 @@ export default async function getRoutes(origin: string, destination: string) {
         return null; // Handle the error as needed in your application
     }
 }
+
+export default getRoutes

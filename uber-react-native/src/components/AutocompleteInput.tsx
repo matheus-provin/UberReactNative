@@ -3,13 +3,24 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import {TextInput, View, StyleSheet, Dimensions} from "react-native";
 const { width, height } = Dimensions.get("screen");
 
-const AutocompleteInputComponent = () => {
+interface AutocompleteInputComponentProps {
+  onChangeText: (text: string) => void;
+  onLocationSelect: (lat: number, lng: number) => void;
+}
+
+
+
+const AutocompleteInputComponent: React.FC<AutocompleteInputComponentProps> = ({ onChangeText, onLocationSelect }) => {
     return (
       <View style={styles.container}>        
       <GooglePlacesAutocomplete
         placeholder='Search'
         onPress={(data, details = null) => {
-          console.log(details?.geometry.location.lat);
+          if (details) {
+            const { location } = details.geometry;
+            // console.log(`firstcall`,typeof location.lat, typeof location.lng)
+            onLocationSelect(location.lat, location.lng);
+          }
         }}
         fetchDetails={true}
         query={{
@@ -19,6 +30,7 @@ const AutocompleteInputComponent = () => {
         }}
         textInputProps={{
           InputComp: TextInput,
+          onChangeText,
         }}
       />
       </View>
